@@ -16,3 +16,6 @@ class data_2023(models.Model): #model zarlasan
     is_published = models.BooleanField(default=False)
 
     cover = models.FileField(upload_to='covers/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title #object-iig string ruu conver hiij baiga heseg

@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from django.views import View
+from django.shortcuts import render
+from rest_framework import viewsets
+from .serializers import NGserializer
 from .models import data_2023
 
 class Another(View):
@@ -16,5 +19,14 @@ class Another(View):
     def get(self, request):
         return HttpResponse(self.output)
 
-def first(request):
-    return HttpResponse('Hello') #end zarlagdsan baiga view-iig url-ru duudna
+
+#herwee temlate ashiglawal ingej ywna
+# def first(request):
+#    return render(request, 'temp.html') #end zarlagdsan baiga view-iig url-ru duudna
+
+
+class NgViewSet(viewsets.ModelViewSet):
+    serializer_class = NGserializer
+    queryset = data_2023.objects.all() #viewset deer REST deer haragdah heseg baina.
+    
+    
