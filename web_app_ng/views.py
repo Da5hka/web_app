@@ -6,6 +6,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import NGserializer
 from .models import data_2023
+from rest_framework.authentication import TokenAuthentication
 
 class Another(View):
 
@@ -29,4 +30,4 @@ class NgViewSet(viewsets.ModelViewSet):
     serializer_class = NGserializer
     queryset = data_2023.objects.all() #viewset deer REST deer haragdah heseg baina.
     
-    
+    authentication_classes = (TokenAuthentication, )
