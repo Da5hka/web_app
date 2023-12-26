@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from django.core.mail import EmailMessage
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
@@ -29,10 +30,18 @@ class PaperViewSet(viewsets.ModelViewSet):
     serializer_class = Paperserializer
     queryset = data_2023.objects.all() #viewset deer REST deer haragdah heseg baina.
     authentication_classes = (TokenAuthentication, )
-
+    #permission_classes = [IsAdminUser]
+    
+    def get_queryset(self):
+        QuerySetFilter = data_2023.objects.filter(is_approved=True)
+        return QuerySetFilter
+    
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        username_post = request.user.username
+        #print(username)
 
         title = serializer.validated_data.get('title')
         if not title:
@@ -41,9 +50,13 @@ class PaperViewSet(viewsets.ModelViewSet):
         else:
             if serializer.is_valid():
                 # Save the data
+                message_body = f" A new paper applicaton was submitted. Pls check and approve, Username: {username_post}"
+                email_message = EmailMessage("Paper submission confirmation", message_body, to=['verifynog@gmail.com'])
+                email_message.send()
+
                 serializer.save()
 
-                response_data = {'message': 'Data saved successfully'}
+                response_data = {'message': 'Data saved successfully. Pls wait admin approval'}
                 return Response(response_data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
