@@ -25,6 +25,7 @@ class data_2023(models.Model): #model zarlasan
 
     #number = models.OneToOneField(Author, null=True, blank=True, on_delete=models.CASCADE)
     Author_id = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    #is_approved = models.BooleanField(default=False, blank=True, null=True) #if post request, get approval from admin
 
 class related_papers(models.Model):
     title_ng_papers = models.CharField(max_length=100, null=True, blank=False) 
