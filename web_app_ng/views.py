@@ -14,6 +14,14 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all() #viewset deer REST deer haragdah heseg baina.
     authentication_classes = (TokenAuthentication, )
 
+    def get_permissions(self):
+        # Apply different permissions for different actions
+        if self.action == 'list':
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
     def create(self, request):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -25,6 +33,19 @@ class UserViewSet(viewsets.ModelViewSet):
                 return Response(response_data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_staff:
+            return User.objects.all()
+        else:
+            return User.objects.filter(username=user.username)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = UserSerializer(queryset, many=True)
+        return Response(serializer.data)
     
 class PaperViewSet(viewsets.ModelViewSet):
     serializer_class = Paperserializer
