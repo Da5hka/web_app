@@ -17,10 +17,10 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         # Apply different permissions for different actions
         if self.action == 'list':
-            permission_classes = [IsAdminUser]
+            return [IsAdminUser()]
         else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+            return [IsAuthenticated()]
+        #return [permission() for permission in permission_classes]
 
     def create(self, request):
             serializer = self.get_serializer(data=request.data)
@@ -40,7 +40,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if user.is_staff:
             return User.objects.all()
         else:
-            return User.objects.filter(username=user.username)
+            return User.objects.filter(id=user.id)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
