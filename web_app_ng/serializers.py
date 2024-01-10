@@ -22,7 +22,7 @@ class Paperserializer(serializers.ModelSerializer):
 class NG_PPT_serializer(serializers.ModelSerializer):
     class Meta:
         model = related_papers
-        fields = ['title_ng_papers', 'description_ng_papers', 'published_ng_papers', 'attach_ng_papers']
+        fields = '__all__'
 
 
                     
